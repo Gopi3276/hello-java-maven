@@ -3,6 +3,7 @@ pipeline{
     tools {
       jdk 'jdk'
       maven 'mvn'
+      dockerTool 'docker'
     }
     stages{
         stage('clean workspace'){
@@ -38,7 +39,7 @@ pipeline{
         stage('push docker image'){
             steps{
                 script{
-                    docker.withRegistry('', 'docker') {
+                    docker.withRegistry('', 'dockerhub-credentials') {
                         dockerImage.push()
                     }
                 }
