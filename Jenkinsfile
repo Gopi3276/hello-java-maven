@@ -32,6 +32,11 @@ pipeline{
             sh 'mvn package'
          }
       }
+      stage('nexus deploy') {
+         steps {
+            sh 'mvn deploy -DskipTests=true'
+         }
+      }
    }
 
 }
