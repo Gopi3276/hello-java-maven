@@ -41,6 +41,13 @@ pipeline{
                 sh 'mvn package'
             }
         }
+        stage('deploy to nexus'){
+            steps{
+                withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+                    sh 'mvn deploy -DskipTests'
+                }
+            }
+        }
         stage('build docker image'){
             steps{
                 script{
