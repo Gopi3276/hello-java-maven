@@ -45,3 +45,8 @@ This guide explains how Jenkins was set up inside a Docker container, configured
 1. Use tomcat:10.1-jdk17 image
 2. Copy hello-1.0.war file from target to /usr/local/tomcat/webapps/
 3. Expose the port 8080
+
+#mvn#
+settings.xml
+mkdir -p ~/.m2
+nano ~/.m2/settings.xml

@@ -44,7 +44,10 @@ pipeline{
         stage('deploy to nexus'){
             steps{
                 withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
-                    sh 'mvn deploy -DskipTests'
+                    sh '''
+                        curl -v -u $NEXUS_USER:$NEXUS_PASS --upload-file target/hello-1.0.war \
+                          http://13.201.60.168:8081/repository/maven-releases/com/example/hello/1.0/hello-1.0.war
+                    '''
                 }
             }
         }
