@@ -47,6 +47,17 @@ pipeline{
             }  
          }
       }
+      stage('docker build and deploy'){
+         steps{
+            withCredentials([usernamePassword(credentialsId: 'dockerhub-pavan1309', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
+               sh '''
+                  docker build -t hello-java-maven:latest .
+                  docker run --name hello-java-maven -d -p 8080:8080 hello-java-maven:latest
+                  
+               '''
+            }
+         }
+      }
    }
 
 
