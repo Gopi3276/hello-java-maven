@@ -34,7 +34,9 @@ pipeline{
       }
       stage('nexus deploy') {
          steps {
-            sh 'mvn deploy -DskipTests'
+            configFileProvider([configFile(fileId: '3a157982-da20-46a4-b9ac-50707b580235', variable: 'mavensettings')]) {
+               sh 'mvn clean deploy -DskipTests -s $mavensettings'
+            }
          }
       }
       
