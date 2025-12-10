@@ -50,3 +50,9 @@ This guide explains how Jenkins was set up inside a Docker container, configured
 settings.xml
 mkdir -p ~/.m2
 nano ~/.m2/settings.xml
+<settings>
+  <mirrors>
+    <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://
