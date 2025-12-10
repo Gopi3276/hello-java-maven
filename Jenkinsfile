@@ -27,6 +27,13 @@ pipeline{
             sh 'mvn test'
          }
       }
+      stage('OWASP Dependency-Check') {
+         steps {
+            dependencyCheck additionalArguments: '''--scan ./ \
+               --out ./dependency-check-report \
+               --format HTML''', odcInstallation: 'dp'
+         }
+      }
       stage('package') {
          steps {
             sh 'mvn package'
@@ -39,7 +46,20 @@ pipeline{
             }
          }
       }
-      
+      stage('sonarqube analysis') {
+         steps {
+            withSonarQubeEnv('sonar-server') {
+               sh 'mvn sonar:sonar'
+            }
+         }
+      }
+      stage('quality gate') {
+         steps {
+            timeout(time: 5, unit: 'MINUTES') {
+               waitForQualityGate abortPipeline: true
+            }
+         }
+      }
    }
 
 }
