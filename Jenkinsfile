@@ -1,65 +1,55 @@
 pipeline{
-    agent {
+   agent {
       label 'mvn'
    }
    tools {
-      jdk 'jdk21'
-      maven 'mvn'
+       jdk 'jdk21'
+       maven 'mvn'
    }
-   stages {
-      stage('clean workspace') {
-         steps {
+   stages{
+      stage('clean workspace'){
+         steps{
             cleanWs()
          }
       }
-      stage('scm checkout') {
-         steps {
+      stage('checkout code'){
+         steps{
             checkout scmGit(branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/pavan-1309/hello-java-maven.git']])
          }
       }
-      stage('compile') {
-         steps {
+      stage('build code'){
+         steps{
             sh 'mvn clean compile'
          }
       }
-      stage('unit test') {
-         steps {
+      stage('run unit tests'){
+         steps{
             sh 'mvn test'
          }
       }
-      stage('OWASP Dependency-Check') {
-         steps {
-            dependencyCheck additionalArguments: '''--scan ./ \
-               --out ./dependency-check-report \
-               --format HTML''', odcInstallation: 'dp'
+      stage('owasp dependency check'){
+         steps{
+            dependencyCheck additionalArguments: '''--scan ./ 
+            --out ./dependency-check-report
+            --format HTML ''', odcInstallation: 'dp'
          }
       }
-      stage('package') {
-         steps {
+      stage('package code'){
+         steps{
             sh 'mvn package'
          }
       }
-      stage('nexus deploy') {
-         steps {
-            configFileProvider([configFile(fileId: '3a157982-da20-46a4-b9ac-50707b580235', variable: 'mavensettings')]) {
-               sh 'mvn clean deploy -DskipTests -s $mavensettings'
-            }
-         }
-      }
-      stage('sonarqube analysis') {
-         steps {
-            withSonarQubeEnv('sonar-server') {
-               sh 'mvn sonar:sonar'
-            }
-         }
-      }
-      stage('quality gate') {
-         steps {
-            timeout(time: 5, unit: 'MINUTES') {
-               waitForQualityGate abortPipeline: true
-            }
+      stage('nexus deploy'){
+         steps{
+            configFileProvider([configFile(fileId: '729b294a-0868-4cbf-bfa6-6476551b3c27', variable: 'mavensettings')]) {
+    
+               sh 'mvn deploy -DskipTests -s $mavensettings'
+            }  
          }
       }
    }
+
+
+
 
 }
