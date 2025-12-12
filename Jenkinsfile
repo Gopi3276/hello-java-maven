@@ -1,66 +1,36 @@
 pipeline{
-   agent {
-      label 'mvn'
+    agent {
+      label 'slave1'
    }
-   tools {
-       jdk 'jdk21'
-       maven 'mvn'
+   tools{
+      jdk 'jdk'
+      maven 'mvn'
    }
    stages{
       stage('clean workspace'){
          steps{
-            cleanWs()
+          cleanWs()  
          }
       }
-      stage('checkout code'){
+      stage('git clone'){
          steps{
-            checkout scmGit(branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/pavan-1309/hello-java-maven.git']])
+            checkout scmGit(branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[credentialsId: 'git-cred', url: 'https://github.com/pavan-1309/hello-java-maven.git']])
          }
       }
-      stage('build code'){
+      stage('compile'){
          steps{
-            sh 'mvn clean compile'
+            sh 'mvn compile'
          }
       }
-      stage('run unit tests'){
+      stage('unit test'){
          steps{
             sh 'mvn test'
          }
       }
-      stage('owasp dependency check'){
+      stage('build'){
          steps{
-            dependencyCheck additionalArguments: '''--scan ./ 
-            --out ./dependency-check-report
-            --format HTML ''', odcInstallation: 'dp'
-         }
-      }
-      stage('package code'){
-         steps{
-            sh 'mvn package'
-         }
-      }
-      stage('nexus deploy'){
-         steps{
-            configFileProvider([configFile(fileId: '729b294a-0868-4cbf-bfa6-6476551b3c27', variable: 'mavensettings')]) {
-    
-               sh 'mvn deploy -DskipTests -s $mavensettings'
-            }  
-         }
-      }
-      stage('docker build and deploy'){
-         steps{
-            withCredentials([usernamePassword(credentialsId: 'dockerhub-pavan1309', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
-               sh '''
-                  docker build -t hello-java-maven:latest .
-                  docker run --name hello-java-maven -d -p 8080:8080 hello-java-maven:latest
-                  
-               '''
-            }
+            sh 'mvn clean package'
          }
       }
    }
-
-
-
-
 }
