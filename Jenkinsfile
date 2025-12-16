@@ -27,6 +27,15 @@ pipeline{
             sh 'mvn test'
          }
       }
+      stage('dp-check'){
+         steps{
+            sh ''' dependencyCheck additionalArguments: '''--scan ./
+                  --out ./ dp-report
+                   --Format HTML ''', odcInstallation: 'dp'
+            
+            '''
+         }
+      }
       stage('package'){
          steps{
             sh 'mvn package -DskipTests'
