@@ -29,11 +29,10 @@ pipeline{
       }
       stage('dp-check'){
          steps{
-            sh ''' dependencyCheck additionalArguments: '''--scan ./
+            dependencyCheck additionalArguments: '''--scan ./
                    --out ./ dp-report
                    --format HTML ''', odcInstallation: 'dp'
-            
-            '''
+   
          }
       }
       stage('package'){
