@@ -30,8 +30,8 @@ pipeline{
       stage('dp-check'){
          steps{
             sh ''' dependencyCheck additionalArguments: '''--scan ./
-                  --out ./ dp-report
-                   --Format HTML ''', odcInstallation: 'dp'
+                   --out ./ dp-report
+                   --format HTML ''', odcInstallation: 'dp'
             
             '''
          }
