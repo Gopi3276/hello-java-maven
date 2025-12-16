@@ -34,7 +34,9 @@ pipeline{
       }
       stage('nexus deploy'){
          steps{
-            sh 'echo "deploy"'
+            configFileProvider([configFile(fileId: 'f18433ee-d6f2-46fa-a692-e4765eebb3d5', variable: 'mvn_setting')]){
+               sh 'mvn deploy -s $mvn_setting'
+            }
          }
       }
    }
