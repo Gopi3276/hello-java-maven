@@ -1,5 +1,7 @@
 pipeline{
-   agent any
+   agent {
+      label 'mvn'
+   }
    tools {
       jdk 'jdk'
       maven 'mvn'
