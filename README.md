@@ -1,5 +1,5 @@
 # hello-java-maven #
-########@@@@@
+########@@@@@@
 ## Overview
 This guide explains how Jenkins was set up inside a Docker container, configured to run a Maven build from a GitHub repository, and how the generated build artifact (`target` folder) was retrieved to the local machine.
 
